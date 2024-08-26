@@ -13,34 +13,44 @@ export default function Home() {
   const [selectedDifficulty, setSelectedDifficulty] = useState<number | null>(
     null
   );
+  const [selectedEndDifficulty, setSelectedEndDifficulty] = useState<
+    number | null
+  >(null);
   const [randomProblems, setRandomProblems] = useState<Problem[]>([]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!selectedDifficulty) {
-      alert("Please select a difficulty level.");
+    if (!selectedDifficulty || !selectedEndDifficulty) {
+      alert("Please select both starting and ending difficulty levels.");
       return;
     }
 
     try {
       const response = await fetch(
-        `https://acodedaily.com/api/v2/ladder?startRating=${selectedDifficulty}&endRating=${
-          selectedDifficulty + 100
-        }`
+        `https://acodedaily.com/api/v2/ladder?startRating=${selectedDifficulty}&endRating=${selectedEndDifficulty+100}`
       );
       const data = await response.json();
-      console.log("Fetched Data:", data);
 
       if (data?.data?.length > 0) {
         const selectedProblems: Problem[] = [];
-        for (let i = 0; i < 5; i++) {
-          const randomProblem =
-            data.data[Math.floor(Math.random() * data.data.length)];
-          selectedProblems.push(randomProblem);
+        const problemSet = new Set();
+
+        while (
+          selectedProblems.length < 5 &&
+          problemSet.size < data.data.length
+        ) {
+          const randomIndex = Math.floor(Math.random() * data.data.length);
+          const randomProblem = data.data[randomIndex];
+
+          if (!problemSet.has(randomIndex)) {
+            selectedProblems.push(randomProblem);
+            problemSet.add(randomIndex);
+          }
         }
+
         setRandomProblems(selectedProblems);
       } else {
-        alert("No problems found for the selected difficulty.");
+        alert("No problems found for the selected difficulty range.");
       }
     } catch (error) {
       console.error("Error fetching problems:", error);
@@ -48,43 +58,66 @@ export default function Home() {
     }
   };
 
-  const handleDifficultyChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setSelectedDifficulty(parseInt(event.target.value, 10));
+  const handleDifficultyChange = (
+    event: ChangeEvent<HTMLSelectElement>,
+    isEndRange = false
+  ) => {
+    const value = parseInt(event.target.value, 10);
+    isEndRange ? setSelectedEndDifficulty(value) : setSelectedDifficulty(value);
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 p-6">
-      <div className="bg-white shadow-lg rounded-lg p-8 text-center max-w-md w-full">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-black text-[#d1d1d1] p-6">
+      <div className="bg-black border border-[#d1d1d1] shadow-lg rounded-lg p-8 text-center max-w-md w-full">
         <Image
           src="/images.png"
           width={120}
           height={120}
-          className="mx-auto mb-6 rounded-full border-4 border-gray-200"
+          className="mx-auto mb-6 border-4 border-[#d1d1d1]"
           alt="Logo"
+          
         />
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">
+        <h1 className="text-3xl font-bold text-[#d1d1d1] mb-6">
           Random CF Question Selector
         </h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <select
-            className="w-full p-3 border border-gray-300 rounded-lg text-gray-700"
-            onChange={handleDifficultyChange}
+            className="w-full p-3 border border-[#d1d1d1] bg-black text-[#d1d1d1]"
+            onChange={(event) => handleDifficultyChange(event, false)}
             defaultValue=""
           >
             <option value="" disabled>
-              Select Difficulty
+              Starting Range
             </option>
-            {[800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600].map(
-              (rating) => (
-                <option key={rating} value={rating}>
-                  {rating}
-                </option>
-              )
-            )}
+            {[
+              800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800,
+              1900, 2000, 2100, 2200, 2300, 2400,
+            ].map((rating) => (
+              <option key={rating} value={rating}>
+                {rating}
+              </option>
+            ))}
+          </select>
+          <select
+            className="w-full p-3 border border-[#d1d1d1] bg-black text-[#d1d1d1]"
+            onChange={(event) => handleDifficultyChange(event, true)}
+            defaultValue=""
+          >
+            <option value="" disabled>
+              Ending Range
+            </option>
+            {[
+              800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800,
+              1900, 2000, 2100, 2200, 2300, 2400,
+            ].map((rating) => (
+              <option value={rating} key={rating}>
+                {rating}
+              </option>
+            ))}
           </select>
           <button
             type="submit"
-            className="w-full py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition duration-300"
+            className="w-full py-3 bg-[#d1d1d1] text-black border border-[#d1d1d1] rounded-lg font-semibold hover:bg-gray-800 hover:text-[#d1d1d1] transition duration-300"
           >
             Submit
           </button>
@@ -96,17 +129,17 @@ export default function Home() {
           {randomProblems.map((problem, index) => (
             <div
               key={index}
-              className="bg-white shadow-md rounded-lg p-6 flex flex-col justify-between transform hover:-translate-y-1 hover:shadow-xl transition duration-300"
+              className="bg-black border border-[#d1d1d1] shadow-md rounded-lg p-6 flex flex-col justify-between transform hover:-translate-y-1 hover:shadow-xl transition duration-300"
             >
-              <h2 className="text-xl font-semibold text-gray-800">
+              <h2 className="text-xl font-semibold text-[#d1d1d1]">
                 {problem.name}
               </h2>
-              <p className="text-gray-600 mt-2">Rating: {problem.rating}</p>
+              <p className="text-gray-400 mt-2">Rating: {problem.rating}</p>
               <a
                 href={`https://codeforces.com/problemset/problem/${problem.contestId}/${problem.index}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-indigo-500 hover:underline mt-4"
+                className="text-[#d1d1d1] hover:underline mt-4"
               >
                 Go to Problem
               </a>
