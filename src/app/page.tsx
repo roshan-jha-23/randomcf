@@ -29,8 +29,6 @@ export default function Home() {
         }`
       );
       const data = await response.json();
-      console.log("Fetched Data:", data);
-
       if (data?.data?.length > 0) {
         const selectedProblems: Problem[] = [];
         for (let i = 0; i < 5; i++) {
@@ -74,7 +72,7 @@ export default function Home() {
             <option value="" disabled>
               Select Difficulty
             </option>
-            {[800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600].map(
+            {[800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600,1700,1800,1900,2000].map(
               (rating) => (
                 <option key={rating} value={rating}>
                   {rating}
