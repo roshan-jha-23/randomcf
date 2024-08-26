@@ -30,7 +30,6 @@ export default function Home() {
         `https://acodedaily.com/api/v2/ladder?startRating=${selectedDifficulty}&endRating=${selectedEndDifficulty+100}`
       );
       const data = await response.json();
-
       if (data?.data?.length > 0) {
         const selectedProblems: Problem[] = [];
         const problemSet = new Set();
@@ -114,6 +113,8 @@ export default function Home() {
                 {rating}
               </option>
             ))}
+
+
           </select>
           <button
             type="submit"
