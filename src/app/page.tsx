@@ -113,6 +113,7 @@ export default function Home() {
               Tags
             </option>
             {[
+            "*special problem",
               "2-sat",
               "binary search",
               "bitmasks",
