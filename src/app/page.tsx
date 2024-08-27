@@ -86,6 +86,10 @@ export default function Home() {
     isEndRange ? setSelectedEndDifficulty(value) : setSelectedDifficulty(value);
   };
 
+  const handleTagChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    setTag(event.target.value);
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-black text-[#d1d1d1] p-6">
       <div className="bg-black border border-[#d1d1d1] shadow-lg rounded-lg p-8 text-center max-w-md w-full">
@@ -100,13 +104,53 @@ export default function Home() {
           Random CF Question Selector
         </h1>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            value={tag || ""}
-            onChange={(e) => setTag(e.target.value)}
-            placeholder="Enter problem Tag (e.g., implementation, dp, math, etc.)"
+          <select
             className="w-full p-3 border border-[#d1d1d1] bg-black text-[#d1d1d1]"
-          />
+            onChange={handleTagChange}
+            defaultValue=""
+          >
+            <option value="" disabled>
+              Tags
+            </option>
+            {[
+              "2-sat",
+              "binary search",
+              "bitmasks",
+              "brute force",
+              "combinatorics",
+              "constructive algorithms",
+              "data structures",
+              "dfs and similar",
+              "divide and conquer",
+              "dp",
+              "dsu",
+              "expression parsing",
+              "fft",
+              "flow",
+              "games",
+              "geometry",
+              "graph matchings",
+              "graphs",
+              "greedy",
+              "hashing",
+              "implementation",
+              "interactive",
+              "math",
+              "matrices",
+              "number theory",
+              "probabilities",
+              "shortest paths",
+              "sortings",
+              "strings",
+              "ternary search",
+              "trees",
+              "two pointers",
+            ].map((tag) => (
+              <option value={tag} key={tag}>
+                {tag}
+              </option>
+            ))}
+          </select>
           <select
             className="w-full p-3 border border-[#d1d1d1] bg-black text-[#d1d1d1]"
             onChange={(event) => handleDifficultyChange(event, false)}
@@ -117,7 +161,7 @@ export default function Home() {
             </option>
             {[
               800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800,
-              1900, 2000, 2100, 2200, 2300, 2400,
+              1900, 2000, 2100, 2200, 2300, 2400,2500,2600,2700,2800,2900,3000,3100,3200,3300,3400,3500
             ].map((rating) => (
               <option key={rating} value={rating}>
                 {rating}
@@ -134,7 +178,7 @@ export default function Home() {
             </option>
             {[
               800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800,
-              1900, 2000, 2100, 2200, 2300, 2400,
+              1900, 2000, 2100, 2200, 2300, 2400,2500,2600,2700,2800,2900,3000,3100,3200,3300,3400,3500
             ].map((rating) => (
               <option value={rating} key={rating}>
                 {rating}
@@ -145,7 +189,7 @@ export default function Home() {
             type="submit"
             className="w-full py-3 bg-[#d1d1d1] text-black border border-[#d1d1d1] rounded-lg font-semibold hover:bg-gray-800 hover:text-[#d1d1d1] transition duration-300"
           >
-            Submit
+            Randomize
           </button>
         </form>
       </div>
